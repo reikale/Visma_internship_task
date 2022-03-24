@@ -17,5 +17,6 @@ namespace Visma_internship_task.Interfaces
         public Models.Type Type {get; set;}
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public List<string> Attendees { get; set; }
     }
 }

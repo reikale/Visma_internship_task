@@ -1,0 +1,17 @@
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\bin\Debug\net6.0\Visma_internship_task.exe
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\bin\Debug\net6.0\Visma_internship_task.deps.json
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\bin\Debug\net6.0\Visma_internship_task.runtimeconfig.json
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\bin\Debug\net6.0\Visma_internship_task.dll
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\bin\Debug\net6.0\Visma_internship_task.pdb
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.csproj.AssemblyReference.cache
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.AssemblyInfoInputs.cache
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.AssemblyInfo.cs
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.csproj.CoreCompileInputs.cache
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.dll
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\refint\Visma_internship_task.dll
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.pdb
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.genruntimeconfig.cache
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\ref\Visma_internship_task.dll
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Inga\Documents\GitHub\Visma_internship_task\Visma_internship_task\obj\Debug\net6.0\Visma_internship_task.csproj.CopyComplete

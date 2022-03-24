@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "nlydtlCHjbLSUSdSZmp9/sdc7YxE3In5EOLLy2Pp+mcu6Ap63ZRxxeM7fbWBXrWloGE3ey5XLjBc4gao/AMbPQ==",
+  "dgSpecHash": "3lkocE6KyrqGuXqYnTD8Y8O0WG6ZnG5e08Aoi6bRE0utV2sgM0AEGVi/3hsoGZgavlvXBFJhJFSm8xNTiEu9oA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Inga\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
   "logs": []
 }
