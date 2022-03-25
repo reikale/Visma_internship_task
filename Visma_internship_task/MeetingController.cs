@@ -49,7 +49,7 @@ namespace Visma_internship_task
                 Console.Clear();
                 UITools.SelectValue(new string[] { "YES", "NO" }, "There are no meetings. Would you like to create one?", actions);
             }
-            Console.WriteLine("\n\n");
+            
             foreach (var meeting in meetings)
             {
                 Console.WriteLine(meeting.Name);

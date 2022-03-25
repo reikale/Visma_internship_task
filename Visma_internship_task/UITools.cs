@@ -35,7 +35,7 @@ namespace Visma_internship_task
             }
             return selection;
         }
-
+        
         public static int SelectValue(string[] options, string question)
         {
             //Console.Clear();
@@ -60,7 +60,31 @@ namespace Visma_internship_task
             }
             return selection;
         }
+        /*public static int SelectMeeting(string[] options, string question)
+        {
+            //Console.Clear();
+            bool exit = false;
+            int selection = 0;
 
+            while (!exit)
+            {
+                Console.WriteLine(question);
+                for (int i = 0; i < options.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1} - {options[i]}");
+                }
+
+                if (!int.TryParse(Console.ReadLine(), out selection) || selection > options.Length || selection < 0)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Incorrect value. Please make sure that the input is a number");
+                    continue;
+                }
+                exit = true;
+                Console.WriteLine($"Selected a meeting named {}");
+            }
+            return selection;
+        }*/
         public static string AnswerQuestion(string question)
         {
             bool exit = false;

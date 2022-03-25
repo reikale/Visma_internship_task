@@ -15,8 +15,7 @@ namespace Visma_internship_task
     {
         const string FILE_NAME = "Database.json";
 
-        List<IMeeting> AllMeetings = new List<IMeeting>();
-        List<IMeeting> objectData;
+        public List<IMeeting> AllMeetings = new List<IMeeting>();
 
         public void AddMeetingToDb(IMeeting meeting)
         {
@@ -43,11 +42,7 @@ namespace Visma_internship_task
                 List<Meeting> MeetingData = JsonConvert.DeserializeObject<List<Meeting>>(textData);
                 List<IMeeting> IMeetingData = MeetingData.ToList<IMeeting>();
                 AllMeetings = IMeetingData;
-                if(objectData != null)
-                {
-                    AllMeetings = objectData;
-                    Console.WriteLine("Data was loaded for a file");
-                }
+                
             }
             
         }
