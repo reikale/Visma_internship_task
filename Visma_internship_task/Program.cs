@@ -13,6 +13,7 @@ var meetingController = new MeetingController();
 string[] StartingOptions = new string[] { "Create a meeting", "View all meetings", "Exit the program" };
 string[] MeetingsListOptions = new string[] { "Select a meeting", "Filter all meetings by...", "Go back" };
 string[] MeetingOptions = new string[] { "Add a person", "Remove a person", "Delete this meeting", "Go back" };
+string[] FilterOptions = new string[] { "Description", "Responsible person", "Category", "Type", "Dates", "Number of attendees" };
 
 var startingActions = new Action[]
     {
@@ -22,19 +23,56 @@ var startingActions = new Action[]
     };
 var meetingActions = new Action[]
 {
-    () => Console.WriteLine("Adding a person to the meeting"),
-    () => Console.WriteLine("Removing a person from the meeting"),
-    () => Console.WriteLine("Deleting this meeting"),
-    () => Console.WriteLine("Going back"),
+    () => {
+        DB.AllMeetings[selectedMeeting-1].Attendees.Add(meetingController.AddPerson());
+        global::System.Console.WriteLine("------");
+        foreach (var attendee in DB.AllMeetings[selectedMeeting-1].Attendees)
+    {
+            global::System.Console.WriteLine(attendee);
+    }
+    },
+    () => {DB.AllMeetings[selectedMeeting-1].Attendees.Remove(meetingController.RemovePerson());
+        global::System.Console.WriteLine("------");
+        foreach (var attendee in DB.AllMeetings[selectedMeeting-1].Attendees)
+    {
+            global::System.Console.WriteLine(attendee);
+    }
+    },
+    () =>
+    {
+        global::System.Console.WriteLine($"The meeting '{DB.AllMeetings[selectedMeeting-1].Name}' was deleted");
+        DB.AllMeetings.Remove(DB.AllMeetings[selectedMeeting-1]);
+        
+    },
+    () => Console.Clear(),
+};
+var filterActions = new Action[]
+{
+    () => meetingController.FilterMeetingsByDescription(DB, "Enter the keyword by which to filter:"),
+    () => {
+        int selection = UITools.SelectValue(DB.ReturnAllResponsiblePeople(), "Select a responsible person from the list:", false);
+        var selectedPerson = DB.ReturnAllResponsiblePeople()[selection-1];
+        meetingController.FilterMeetingsByResponsiblePerson(DB, selectedPerson);
+    },
+    () => {
+        var meetingCategory = (Category)UITools.SelectValue(Enum.GetNames(typeof(Category)), "Select a meeting category from the list:", true);
+        meetingController.FilterMeetingByCategory(DB, meetingCategory);
+    },
+    () => {
+        var meetingType = (Visma_internship_task.Models.Type)UITools.SelectValue(Enum.GetNames(typeof(Visma_internship_task.Models.Type)), "Select a meeting type:", true);
+        meetingController.FilterMeetingByType(DB, meetingType);
+    },
+    () => meetingController.FilterMeetingByDate(DB),
+    () => meetingController.FilterByAttendees(DB)
 };
 var meetingListActions = new Action[]
 {
     () =>
     {
         Console.Clear();
-        selectedMeeting = UITools.SelectValue(DB.AllMeetings.Select(x => x.Name).ToArray(), "Please select a meeting from the list:");
+        selectedMeeting = UITools.SelectValue(DB.AllMeetings.Select(x => x.Name).ToArray(), "Please select a meeting from the list:", false);
     },
-    () => Console.WriteLine("Filter options"),
+    () => UITools.SelectValue(FilterOptions, "Please select a filter.\nFilter by...\n", filterActions),
     () => Console.Clear()
 };
 
@@ -50,17 +88,33 @@ while (isOn)
 {
     
     var startOutput = UITools.SelectValue(StartingOptions, "Please select what do you want to do next:", startingActions);
-    if(startOutput == 2)
+    
+    if (startOutput == 2)
     {
-        UITools.SelectValue(MeetingsListOptions, "Please select what do you want to do next:", meetingListActions);
-        Console.Clear();
-        Console.WriteLine($"You selected the meeting '{DB.AllMeetings[selectedMeeting-1].Name}'\n\n");
-        // Meeting options
         
-        UITools.SelectValue(MeetingOptions, "Please select what do you want to do next:", meetingActions);
+        var selection = UITools.SelectValue(MeetingsListOptions, "Please select what do you want to do next:", meetingListActions);
+        //Console.Clear();
+        if(selectedMeeting > 0)
+        {
+            Console.WriteLine($"You selected the meeting '{DB.AllMeetings[selectedMeeting - 1].Name}'\n\n");
+        }
+        switch (selection)
+        {
+            // jei nebus daugiau casu tai padaryt tiesiog if statementa
+            case 1:
+                UITools.SelectValue(MeetingOptions, "Please select what do you want to do next:", meetingActions);
+                break;
+            default:
+                break;
+        }
+        // Meeting options
+
+        
         
         Console.WriteLine("\n");
+        DB.SaveData();
     }
+    selectedMeeting = -1;
 }
 
 

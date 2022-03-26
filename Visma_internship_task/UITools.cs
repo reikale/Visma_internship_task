@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +38,7 @@ namespace Visma_internship_task
             return selection;
         }
         
-        public static int SelectValue(string[] options, string question)
+        public static int SelectValue(string[] options, string question, bool isEnum)
         {
             //Console.Clear();
             bool exit = false;
@@ -57,6 +59,10 @@ namespace Visma_internship_task
                     continue;
                 }
                 exit = true;
+            }
+            if (isEnum)
+            {
+                selection--;
             }
             return selection;
         }
@@ -130,6 +136,7 @@ namespace Visma_internship_task
             }
             return DateTime.Now;
         }
+        
 
     }
 }

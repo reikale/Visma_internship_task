@@ -50,7 +50,10 @@ namespace Visma_internship_task
         {
             return AllMeetings.ToArray();
         }
-
-
+        public string[] ReturnAllResponsiblePeople()
+        {
+            return AllMeetings.Select(x => x.ResponsiblePerson).Distinct().ToArray();
+        }
+     
     }
 }
