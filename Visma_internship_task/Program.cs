@@ -1,6 +1,4 @@
-﻿
-using Visma_internship_task;
-using Visma_internship_task.Interfaces;
+﻿using Visma_internship_task;
 using Visma_internship_task.Models;
 
 //ALL THE VARIABLES
@@ -27,29 +25,24 @@ var meetingActions = new Action[]
         meetingController.AddPerson(DB, selectedMeeting);
         global::System.Console.WriteLine("\nList of attendees:");
         foreach (var attendee in DB.AllMeetings[selectedMeeting-1].Attendees)
-    {
+        {
             global::System.Console.WriteLine(attendee);
-    }
+        }
     },
     () => {
         meetingController.RemovePerson(DB, selectedMeeting);
         global::System.Console.WriteLine("\nList of attendees:");
         foreach (var attendee in DB.AllMeetings[selectedMeeting-1].Attendees)
-    {
+        {
             global::System.Console.WriteLine(attendee);
-    }
+        }
     },
-    () =>
-    {
-        
-        meetingController.DeleteAMeeting(DB, selectedMeeting);
-        
-    },
+    () => meetingController.DeleteAMeeting(DB, selectedMeeting),
     () => Console.Clear(),
 };
 var filterActions = new Action[]
 {
-    () => meetingController.FilterMeetingsByDescription(DB, "Enter the keyword by which to filter:"),
+    () => meetingController.FilterMeetingsByDescription(DB, "Enter the keyword by which to you want to filter the meetings:"),
     () => {
         int selection = UITools.SelectValue(DB.ReturnAllResponsiblePeople(), "Select a responsible person from the list:", false);
         var selectedPerson = DB.ReturnAllResponsiblePeople()[selection-1];
@@ -77,13 +70,9 @@ var meetingListActions = new Action[]
     () => {
         Console.Clear();
         UITools.SelectValue(FilterOptions, "Please select a filter.\nFilter by...\n", filterActions); 
-
     },
     () => Console.Clear()
 };
-
-
-// --- THE APP START HERE ---
 
 
 DB.LoadData();
@@ -92,31 +81,18 @@ Console.WriteLine("Welcome to the meetings console app\n\n");
 
 while (isOn)
 {
-    
     var startOutput = UITools.SelectValue(StartingOptions, "Please select what do you want to do next:", startingActions);
-    
     if (startOutput == 2)
     {
-        
         var selection = UITools.SelectValue(MeetingsListOptions, "Please select what do you want to do next:", meetingListActions);
-        //Console.Clear();
         if(selectedMeeting > 0)
         {
             Console.WriteLine($"You selected the meeting '{DB.AllMeetings[selectedMeeting - 1].Name}'\n\n");
         }
-        switch (selection)
+        if(selection == 1)
         {
-            // jei nebus daugiau casu tai padaryt tiesiog if statementa
-            case 1:
-                UITools.SelectValue(MeetingOptions, "Please select what do you want to do next:", meetingActions);
-                break;
-            default:
-                break;
+            UITools.SelectValue(MeetingOptions, "Please select what do you want to do next:", meetingActions);
         }
-        // Meeting options
-
-        
-        
         Console.WriteLine("\n");
         DB.SaveData();
     }

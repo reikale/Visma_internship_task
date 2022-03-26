@@ -22,16 +22,13 @@ namespace Visma_internship_task
             AllMeetings.Add(meeting);
             SaveData();
         }
-        //should be stored in a JSON file
 
-        //TODO 1: SAVE DATA IN FILE AS JSON
         public void SaveData()
         {
             var textData = JsonConvert.SerializeObject(AllMeetings);
             File.WriteAllText(FILE_NAME, textData);
         }
 
-        //TODO 2: LOAD DATA FROM FILE
         public void LoadData()
         {
             if (File.Exists(FILE_NAME))
@@ -41,18 +38,17 @@ namespace Visma_internship_task
                 List<Meeting> MeetingData = JsonConvert.DeserializeObject<List<Meeting>>(textData);
                 List<IMeeting> IMeetingData = MeetingData.ToList<IMeeting>();
                 AllMeetings = IMeetingData;
-                
             }
-            
         }
+
         public IMeeting[] ReturnAllMeetings()
         {
             return AllMeetings.ToArray();
         }
+
         public string[] ReturnAllResponsiblePeople()
         {
             return AllMeetings.Select(x => x.ResponsiblePerson).Distinct().ToArray();
         }
-     
     }
 }

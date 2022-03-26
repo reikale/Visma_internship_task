@@ -14,7 +14,6 @@ namespace Visma_internship_task
     {
         public IMeeting CreateAMeeting()
         {
-
             var meetingName = UITools.AnswerQuestion("Set a name for the meeting:");
             var responsiblePerson = UITools.AnswerQuestion("Set a responsible person for the meeting:");
             var description = UITools.AnswerQuestion("Set a description for the meeting:");
@@ -43,7 +42,7 @@ namespace Visma_internship_task
             }
             else
             {
-                Console.WriteLine($"{userInput} is not responsible for this meeting and does not have the rights to delete it");
+                Console.WriteLine($"{userInput} is not responsible for this meeting therefore does not have the rights to delete it.\nThe meeting was not deleted");
             }
         }
 
@@ -57,24 +56,22 @@ namespace Visma_internship_task
                     () => CreateAMeeting(),
                     () => Console.Clear()
                 };
-
                 Console.Clear();
                 UITools.SelectValue(new string[] { "YES", "NO" }, "There are no meetings. Would you like to create one?", actions);
             }
-            
             foreach (var meeting in meetings)
             {
                 Console.WriteLine(meeting.Name);
             }
             Console.WriteLine("\n\n");
         }
+
         public string AddPerson(Database database, int selectedMeeting)
         {
             string userInput = UITools.AnswerQuestion("Enter the name of the person you want to add to the meeting:");
             var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
             if (!relevantMeeting.Attendees.Contains(userInput))
             {
-
                 var meetingsPersonAttends = database.AllMeetings.Where(x => x.Attendees.Contains(userInput)).ToList();
                 var overlapingMeetings = meetingsPersonAttends.Where(x => x.StartDate<= relevantMeeting.EndDate && x.EndDate >= relevantMeeting.StartDate).ToArray();
                 if (overlapingMeetings.Any())
@@ -84,7 +81,6 @@ namespace Visma_internship_task
                     {
                         Console.WriteLine($"{i} - Name: {overlapingMeetings[i].Name} - Start date: {overlapingMeetings[i].StartDate} - End date: {overlapingMeetings[i].EndDate}");
                     }
-
                 }
                 relevantMeeting.Attendees.Add(userInput);
                 Console.WriteLine($"\n{userInput} was added to the '{relevantMeeting.Name}' meeting at {DateTime.Now}");
@@ -95,6 +91,7 @@ namespace Visma_internship_task
             }
             return userInput;
         }
+
         public string RemovePerson(Database database, int selectedMeeting)
         {
             var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
@@ -110,51 +107,67 @@ namespace Visma_internship_task
             }
             return userInput;
         }
+
         public void FilterMeetingsByDescription(Database database, string question)
         {
             Console.WriteLine(question);
             var userInput = Console.ReadLine();
-
             if (userInput != null)
             {
                 var result = database.AllMeetings.Where(x => x.Description.Contains(userInput)).ToArray();
                 Console.Clear();
-                global::System.Console.WriteLine("Filter results:");
-                for (int i = 0; i < result.Length; i++)
+                if(result.Length == 0)
                 {
-                    global::System.Console.WriteLine($"{i} - Name: {result[i].Name} - Description: {result[i].Description}");
+                    Console.WriteLine($"Sorry, there is no meeting with description that includes '{userInput}'");
+                }
+                else
+                {
+                    Console.WriteLine("Filter results:");
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        Console.WriteLine($"{i} - Name: {result[i].Name} - Description: {result[i].Description}");
+                    }
                 }
             }
         }
+
         public void FilterMeetingsByResponsiblePerson(Database database, string responsiblePerson)
         {
             if (responsiblePerson != null)
             {
                 var result = database.AllMeetings.Where(x => x.ResponsiblePerson == responsiblePerson).ToArray();
                 Console.Clear();
-                global::System.Console.WriteLine("Filter results:");
-                for (int i = 0; i < result.Length; i++)
+                if (result.Length == 0)
                 {
-                    global::System.Console.WriteLine($"{i} - Name: {result[i].Name} - Responsible Person: {result[i].ResponsiblePerson}");
-                }
-            }
-        }
-        public void FilterMeetingByCategory(Database database, Category category)
-        {
-                var result = database.AllMeetings.Where(x => x.Category == category).ToArray();
-                Console.Clear();
-                if(result.Length == 0)
-                {
-                    Console.WriteLine($"Sorry there is no meeting of {category} category");
+                    Console.WriteLine($"Sorry, there is no meeting where {responsiblePerson} is responsible");
                 }
                 else
                 {
-                global::System.Console.WriteLine("Filter results:");
+                    Console.WriteLine("Filter results:");
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        Console.WriteLine($"{i} - Name: {result[i].Name} - Responsible Person: {result[i].ResponsiblePerson}");
+                    }
+                }
+            }
+        }
+
+        public void FilterMeetingByCategory(Database database, Category category)
+        {
+            var result = database.AllMeetings.Where(x => x.Category == category).ToArray();
+            Console.Clear();
+            if(result.Length == 0)
+            {
+                Console.WriteLine($"Sorry, there is no meeting of {category} category");
+            }
+            else
+            {
+                Console.WriteLine("Filter results:");
                 for (int i = 0; i < result.Length; i++)
                 {
-                    global::System.Console.WriteLine($"{i} - Name: {result[i].Name} - Category: {result[i].Category}");
+                    Console.WriteLine($"{i} - Name: {result[i].Name} - Category: {result[i].Category}");
                 }
-                }
+            }
         }
         public void FilterMeetingByType(Database database, Models.Type type)
         {
@@ -166,13 +179,14 @@ namespace Visma_internship_task
             }
             else
             {
-                global::System.Console.WriteLine("Filter results:");
+                Console.WriteLine("Filter results:");
                 for (int i = 0; i < result.Length; i++)
                 {
-                    global::System.Console.WriteLine($"{i} - Name: {result[i].Name} - Type: {result[i].Type}");
+                    Console.WriteLine($"{i} - Name: {result[i].Name} - Type: {result[i].Type}");
                 }
             }
         }
+
         public void FilterMeetingByDate(Database database)
         {
             var userStartDate = UITools.AnswerDateQuestion("Type a start time for the meeting:");
@@ -185,18 +199,18 @@ namespace Visma_internship_task
             }
             else
             {
-                global::System.Console.WriteLine("Filter results:");
+                Console.WriteLine("Filter results:");
                 for (int i = 0; i < filteredMeetings.Length; i++)
                 {
-                    global::System.Console.WriteLine($"{i} - Name: {filteredMeetings[i].Name} - Start date: {filteredMeetings[i].StartDate} - End date: {filteredMeetings[i].EndDate}");
+                    Console.WriteLine($"{i} - Name: {filteredMeetings[i].Name} - Start date: {filteredMeetings[i].StartDate} - End date: {filteredMeetings[i].EndDate}");
                 }
             }
         }
+
         public void FilterByAttendees(Database database)
         {
             bool isOn = true;
             int selectedNumber = -1;
-
             while (isOn)
             {
                 string userInput = UITools.AnswerQuestion("Please type the minimum number of attendees to filter the meetings:");
@@ -218,10 +232,10 @@ namespace Visma_internship_task
             }
             else
             {
-                global::System.Console.WriteLine("Filter results:");
+                Console.WriteLine("Filter results:");
                 for (int i = 0; i < result.Length; i++)
                 {
-                    global::System.Console.WriteLine($"{i} - Name: {result[i].Name} - Number of attendees: {result[i].Attendees.Count}");
+                    Console.WriteLine($"{i} - Name: {result[i].Name} - Number of attendees: {result[i].Attendees.Count}");
                 }
             }
         }
