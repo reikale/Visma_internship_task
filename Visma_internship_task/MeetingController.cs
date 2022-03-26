@@ -12,7 +12,6 @@ namespace Visma_internship_task
 {
     public class MeetingController
     {
-        // TODO 0: CREATE A MEETING
         public IMeeting CreateAMeeting()
         {
 
@@ -33,11 +32,21 @@ namespace Visma_internship_task
             Console.WriteLine("\n\n");
             return newMeeting;
         }
-        
-        // TODO 1: DELETE A MEETING
-        // TODO 2: ADD A PERSON TO THE MEETING
-        // TODO 3: REMOVE A PERSON FROM THE MEETING
-        // TODO 4: LIST ALL THE MEETINGS
+
+        public void DeleteAMeeting(Database database, int selectedMeeting)
+        {
+            var userInput = UITools.AnswerQuestion("Enter the name of a person who wants to delete this meeting:");
+            if(database.AllMeetings[selectedMeeting-1].ResponsiblePerson == userInput)
+            {
+                Console.WriteLine($"The meeting '{database.AllMeetings[selectedMeeting - 1].Name}' was deleted successfully");
+                database.AllMeetings.Remove(database.AllMeetings[selectedMeeting - 1]);
+            }
+            else
+            {
+                Console.WriteLine($"{userInput} is not responsible for this meeting and does not have the rights to delete it");
+            }
+        }
+
         public void DisplayAllMeetings(IMeeting[] meetings)
         {
             Console.Clear();
@@ -59,22 +68,46 @@ namespace Visma_internship_task
             }
             Console.WriteLine("\n\n");
         }
-        public string AddPerson()
+        public string AddPerson(Database database, int selectedMeeting)
         {
-            Console.Clear();
-            Console.WriteLine("Enter the name of the person you want to add to the meeting:");
-            string userInput = Console.ReadLine();
-            // PATIKRINTI AR TOKS ZMOGUS JAU YRA
-            Console.WriteLine($"{userInput} was added to the meeting.");
+            string userInput = UITools.AnswerQuestion("Enter the name of the person you want to add to the meeting:");
+            var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
+            if (!relevantMeeting.Attendees.Contains(userInput))
+            {
+
+                var meetingsPersonAttends = database.AllMeetings.Where(x => x.Attendees.Contains(userInput)).ToList();
+                var overlapingMeetings = meetingsPersonAttends.Where(x => x.StartDate<= relevantMeeting.EndDate && x.EndDate >= relevantMeeting.StartDate).ToArray();
+                if (overlapingMeetings.Any())
+                {
+                    Console.WriteLine($"\nWarning! {userInput} has a meeting at this time. The list of intersecting meetings:");
+                    for (int i = 0; i < overlapingMeetings.Length; i++)
+                    {
+                        Console.WriteLine($"{i} - Name: {overlapingMeetings[i].Name} - Start date: {overlapingMeetings[i].StartDate} - End date: {overlapingMeetings[i].EndDate}");
+                    }
+
+                }
+                relevantMeeting.Attendees.Add(userInput);
+                Console.WriteLine($"\n{userInput} was added to the '{relevantMeeting.Name}' meeting at {DateTime.Now}");
+            }
+            else
+            {
+                Console.WriteLine($"{userInput} already attends '{relevantMeeting.Name}' meeting");
+            }
             return userInput;
         }
-        public string RemovePerson()
+        public string RemovePerson(Database database, int selectedMeeting)
         {
-            Console.Clear();
-            Console.WriteLine("Enter the name of the person you want to remove from the meeting:");
-            string userInput = Console.ReadLine();
-            // PATIKRINTI AR TOKS ZMOGUS JAU YRA
-            Console.WriteLine($"{userInput} was removed from the meeting.");
+            var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
+            string userInput = UITools.AnswerQuestion("Enter the name of the person you want to remove from the meeting:");
+            if(relevantMeeting.ResponsiblePerson != userInput)
+            {
+                Console.WriteLine($"{userInput} was removed from the meeting.");
+                relevantMeeting.Attendees.Remove(userInput);
+            }
+            else
+            {
+                Console.WriteLine($"{userInput} is the responsible person for this meeting therefore cannot be removed");
+            }
             return userInput;
         }
         public void FilterMeetingsByDescription(Database database, string question)
@@ -145,7 +178,7 @@ namespace Visma_internship_task
             var userStartDate = UITools.AnswerDateQuestion("Type a start time for the meeting:");
             var userEndDate = UITools.AnswerDateQuestion("Type a end time for the meeting:");
             
-            var filteredMeetings = database.AllMeetings.Where(x => x.StartDate > userStartDate && x.EndDate < userEndDate).ToArray();
+            var filteredMeetings = database.AllMeetings.Where(x => x.StartDate >= userStartDate && x.EndDate <= userEndDate).ToArray();
             if (filteredMeetings.Length == 0)
             {
                 Console.WriteLine($"Sorry there is no meeting of selected time period");

@@ -27,7 +27,6 @@ namespace Visma_internship_task
         //TODO 1: SAVE DATA IN FILE AS JSON
         public void SaveData()
         {
-            Console.WriteLine("Data was saved in a file as JSON");
             var textData = JsonConvert.SerializeObject(AllMeetings);
             File.WriteAllText(FILE_NAME, textData);
         }

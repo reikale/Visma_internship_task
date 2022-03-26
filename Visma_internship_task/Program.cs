@@ -12,7 +12,7 @@ var meetingController = new MeetingController();
 
 string[] StartingOptions = new string[] { "Create a meeting", "View all meetings", "Exit the program" };
 string[] MeetingsListOptions = new string[] { "Select a meeting", "Filter all meetings by...", "Go back" };
-string[] MeetingOptions = new string[] { "Add a person", "Remove a person", "Delete this meeting", "Go back" };
+string[] MeetingOptions = new string[] { "Add a person to this meeting", "Remove a person from this meeting", "Delete this meeting", "Go back" };
 string[] FilterOptions = new string[] { "Description", "Responsible person", "Category", "Type", "Dates", "Number of attendees" };
 
 var startingActions = new Action[]
@@ -24,15 +24,16 @@ var startingActions = new Action[]
 var meetingActions = new Action[]
 {
     () => {
-        DB.AllMeetings[selectedMeeting-1].Attendees.Add(meetingController.AddPerson());
-        global::System.Console.WriteLine("------");
+        meetingController.AddPerson(DB, selectedMeeting);
+        global::System.Console.WriteLine("\nList of attendees:");
         foreach (var attendee in DB.AllMeetings[selectedMeeting-1].Attendees)
     {
             global::System.Console.WriteLine(attendee);
     }
     },
-    () => {DB.AllMeetings[selectedMeeting-1].Attendees.Remove(meetingController.RemovePerson());
-        global::System.Console.WriteLine("------");
+    () => {
+        meetingController.RemovePerson(DB, selectedMeeting);
+        global::System.Console.WriteLine("\nList of attendees:");
         foreach (var attendee in DB.AllMeetings[selectedMeeting-1].Attendees)
     {
             global::System.Console.WriteLine(attendee);
@@ -40,8 +41,8 @@ var meetingActions = new Action[]
     },
     () =>
     {
-        global::System.Console.WriteLine($"The meeting '{DB.AllMeetings[selectedMeeting-1].Name}' was deleted");
-        DB.AllMeetings.Remove(DB.AllMeetings[selectedMeeting-1]);
+        
+        meetingController.DeleteAMeeting(DB, selectedMeeting);
         
     },
     () => Console.Clear(),
@@ -55,6 +56,7 @@ var filterActions = new Action[]
         meetingController.FilterMeetingsByResponsiblePerson(DB, selectedPerson);
     },
     () => {
+        Console.Clear();
         var meetingCategory = (Category)UITools.SelectValue(Enum.GetNames(typeof(Category)), "Select a meeting category from the list:", true);
         meetingController.FilterMeetingByCategory(DB, meetingCategory);
     },
@@ -72,7 +74,11 @@ var meetingListActions = new Action[]
         Console.Clear();
         selectedMeeting = UITools.SelectValue(DB.AllMeetings.Select(x => x.Name).ToArray(), "Please select a meeting from the list:", false);
     },
-    () => UITools.SelectValue(FilterOptions, "Please select a filter.\nFilter by...\n", filterActions),
+    () => {
+        Console.Clear();
+        UITools.SelectValue(FilterOptions, "Please select a filter.\nFilter by...\n", filterActions); 
+
+    },
     () => Console.Clear()
 };
 

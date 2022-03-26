@@ -9,7 +9,6 @@ namespace Visma_internship_task.Models
 {
     internal class Meeting : IMeeting
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string ResponsiblePerson { get; set; }
         public string Description { get; set; }
