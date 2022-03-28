@@ -15,9 +15,9 @@ namespace Visma_internship_task
     {
         const string FILE_NAME = "Database.json";
 
-        public List<IMeeting> AllMeetings = new List<IMeeting>();
+        public List<Meeting> AllMeetings = new List<Meeting>();
 
-        public void AddMeetingToDb(IMeeting meeting)
+        public void AddMeetingToDb(Meeting meeting)
         {
             AllMeetings.Add(meeting);
             SaveData();
@@ -27,21 +27,26 @@ namespace Visma_internship_task
         {
             var textData = JsonConvert.SerializeObject(AllMeetings);
             File.WriteAllText(FILE_NAME, textData);
+            
         }
 
-        public void LoadData()
+        public List<Meeting> LoadData()
         {
             if (File.Exists(FILE_NAME))
             {
                 var textData = File.ReadAllText(FILE_NAME);
                 
                 List<Meeting> MeetingData = JsonConvert.DeserializeObject<List<Meeting>>(textData);
-                List<IMeeting> IMeetingData = MeetingData.ToList<IMeeting>();
-                AllMeetings = IMeetingData;
+                AllMeetings = MeetingData;
+                return AllMeetings;
+            }
+            else
+            {
+                throw new FileNotFoundException();
             }
         }
 
-        public IMeeting[] ReturnAllMeetings()
+        public Meeting[] ReturnAllMeetings()
         {
             return AllMeetings.ToArray();
         }

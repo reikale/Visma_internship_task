@@ -12,53 +12,110 @@ namespace Visma_internship_task
 {
     public class MeetingController
     {
-        public IMeeting CreateAMeeting()
+        public Meeting CreateAMeeting()
         {
-            var meetingName = UITools.AnswerQuestion("Set a name for the meeting:");
-            var responsiblePerson = UITools.AnswerQuestion("Set a responsible person for the meeting:");
-            var description = UITools.AnswerQuestion("Set a description for the meeting:");
-            Console.Clear();
-            var meetingCategory = (Category)UITools.SelectValue(Enum.GetNames(typeof(Category)), "Select a meeting category:", true);
-            Console.Clear();
-            var meetingType = (Models.Type)UITools.SelectValue(Enum.GetNames(typeof(Models.Type)), "Select a meeting type:", true);
-            var meetingStart = UITools.AnswerDateQuestion("Set a start time for the meeting:");
-            var meetingEnd = UITools.AnswerDateQuestion("Set a end time for the meeting:");
+            string meetingName = string.Empty;
+            string responsiblePerson = string.Empty;
+            string description = string.Empty;
+            Category meetingCategory = Category.TeamBuilding;
+            Models.Type meetingType = Models.Type.Live;
+            DateTime meetingStart = DateTime.Now;
+            DateTime meetingEnd = DateTime.Now;
 
-            var newMeeting = new Meeting(meetingName, responsiblePerson, description, meetingCategory, meetingType, meetingStart, meetingEnd);
-            newMeeting.Attendees.Add(responsiblePerson);
-            Console.WriteLine("\n\n");
-            Console.WriteLine($"A new meeting named '{newMeeting.Name}' was created");
-            Console.WriteLine("\n\n");
+            AskQuestionsForMeetingCreation(
+            ref meetingName,
+            ref responsiblePerson,
+            ref description,
+            ref meetingCategory,
+            ref meetingType,
+            ref meetingStart,
+            ref meetingEnd);
+
+            var newMeeting = CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, meetingStart, meetingEnd);
             return newMeeting;
+        }
+        
+        public void AskQuestionsForMeetingCreation(
+            ref string meetingName, 
+            ref string responsiblePerson, 
+            ref string description, 
+            ref Category meetingCategory, 
+            ref Models.Type meetingType, 
+            ref DateTime meetingStart, 
+            ref DateTime meetingEnd)
+        {
+            meetingName = UITools.AnswerQuestion("Set a name for the meeting:");
+            responsiblePerson = UITools.AnswerQuestion("Set a responsible person for the meeting:");
+            description = UITools.AnswerQuestion("Set a description for the meeting:");
+            Console.Clear();
+            meetingCategory = (Category)UITools.SelectValue(Enum.GetNames(typeof(Category)), "Select a meeting category:", true);
+            Console.Clear();
+            meetingType = (Models.Type)UITools.SelectValue(Enum.GetNames(typeof(Models.Type)), "Select a meeting type:", true);
+            bool isOn = true;
+            while (isOn)
+            {
+                meetingStart = UITools.AnswerDateQuestion("Set a start time for the meeting:");
+                meetingEnd = UITools.AnswerDateQuestion("Set a end time for the meeting:");
+                if(meetingStart > meetingEnd)
+                {
+                    Console.WriteLine("The time of the start can't be later than the end of the meeting. Please try again.");
+                    continue;
+                }
+                isOn = false;
+            }
+            
+        }
+
+        public Meeting CreateMeetingObject(string meetingName, string responsiblePerson, string description, Category meetingCategory, Models.Type meetingType, DateTime meetingStart, DateTime meetingEnd)
+        {
+            if(string.IsNullOrWhiteSpace(meetingName) || string.IsNullOrWhiteSpace(responsiblePerson) || string.IsNullOrWhiteSpace(description))
+            {
+                throw new ArgumentException();
+            }
+            var output = new Meeting(meetingName, responsiblePerson, description, meetingCategory, meetingType, meetingStart, meetingEnd);
+            output.Attendees.Add(responsiblePerson);
+            Console.WriteLine($"\n\nA new meeting named '{output.Name}' was created\n\n");
+            return output;
         }
 
         public void DeleteAMeeting(Database database, int selectedMeeting)
         {
+            var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
             var userInput = UITools.AnswerQuestion("Enter the name of a person who wants to delete this meeting:");
-            if(database.AllMeetings[selectedMeeting-1].ResponsiblePerson == userInput)
+            bool isTheRightPerson = CheckForResponsiblePerson(relevantMeeting, userInput);
+            if (isTheRightPerson)
             {
-                Console.WriteLine($"The meeting '{database.AllMeetings[selectedMeeting - 1].Name}' was deleted successfully");
-                database.AllMeetings.Remove(database.AllMeetings[selectedMeeting - 1]);
+                RemoveMeetingFromDB(relevantMeeting, database);
             }
             else
             {
                 Console.WriteLine($"{userInput} is not responsible for this meeting therefore does not have the rights to delete it.\nThe meeting was not deleted");
             }
         }
+        
+        public bool CheckForResponsiblePerson(Meeting relevantMeeting, string userInput)
+        {
+            if (relevantMeeting.ResponsiblePerson == userInput)
+            {
+                return true;
+            }
+            else
+            {
+               return false;
+            }
+        }
+        
+        public Database RemoveMeetingFromDB(Meeting relevantMeeting, Database database)
+        {
+            Console.WriteLine($"The meeting '{relevantMeeting.Name}' was deleted successfully");
+            database.AllMeetings.Remove(relevantMeeting);
+            return database;
+        }
 
-        public void DisplayAllMeetings(IMeeting[] meetings)
+        public void DisplayAllMeetings(Meeting[] meetings)
         {
             Console.Clear();
-            if (meetings.Length == 0)
-            {
-                var actions = new Action[]
-                {
-                    () => CreateAMeeting(),
-                    () => Console.Clear()
-                };
-                Console.Clear();
-                UITools.SelectValue(new string[] { "YES", "NO" }, "There are no meetings. Would you like to create one?", actions);
-            }
+            CreateAMeetingIfThereAreNone(meetings);
             foreach (var meeting in meetings)
             {
                 Console.WriteLine(meeting.Name);
@@ -66,24 +123,32 @@ namespace Visma_internship_task
             Console.WriteLine("\n\n");
         }
 
+        public string CreateAMeetingIfThereAreNone(Meeting[] meetings)
+        {
+            if (meetings.Length == 0)
+            {
+                var actions = new Action[]
+                {
+                    () => CreateAMeeting(),
+                    () => Console.Clear()
+                };
+                
+                UITools.SelectValue(new string[] { "YES", "NO" }, "\nThere are no meetings. Would you like to create one?", actions);
+                return "There are no meetings, therefore user was suggested to create one";
+            }
+            return $"There are {meetings.Length} meetings";
+        }
+
         public string AddPerson(Database database, int selectedMeeting)
         {
             string userInput = UITools.AnswerQuestion("Enter the name of the person you want to add to the meeting:");
-            var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
-            if (!relevantMeeting.Attendees.Contains(userInput))
+            Meeting relevantMeeting = database.AllMeetings[selectedMeeting - 1];
+            if (CheckIfPersonAlreadyInMeeting(relevantMeeting, userInput))
             {
-                var meetingsPersonAttends = database.AllMeetings.Where(x => x.Attendees.Contains(userInput)).ToList();
-                var overlapingMeetings = meetingsPersonAttends.Where(x => x.StartDate<= relevantMeeting.EndDate && x.EndDate >= relevantMeeting.StartDate).ToArray();
-                if (overlapingMeetings.Any())
-                {
-                    Console.WriteLine($"\nWarning! {userInput} has a meeting at this time. The list of intersecting meetings:");
-                    for (int i = 0; i < overlapingMeetings.Length; i++)
-                    {
-                        Console.WriteLine($"{i} - Name: {overlapingMeetings[i].Name} - Start date: {overlapingMeetings[i].StartDate} - End date: {overlapingMeetings[i].EndDate}");
-                    }
-                }
-                relevantMeeting.Attendees.Add(userInput);
-                Console.WriteLine($"\n{userInput} was added to the '{relevantMeeting.Name}' meeting at {DateTime.Now}");
+                var meetingsPersonAttends = ReturnListOfMeetingsTheUserAttends(database, userInput);
+                var overlapingMeetings = ReturnOverlappingMeetings(meetingsPersonAttends, relevantMeeting);
+                ShowAllOverlappingMeetings(overlapingMeetings, userInput);
+                AddPersonToDB(relevantMeeting, userInput);
             }
             else
             {
@@ -91,21 +156,68 @@ namespace Visma_internship_task
             }
             return userInput;
         }
+        
+        public bool CheckIfPersonAlreadyInMeeting(Meeting relevantMeeting, string userInput)
+        {
+            if (!relevantMeeting.Attendees.Contains(userInput))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        
+        public void AddPersonToDB(Meeting relevantMeeting, string userInput)
+        {
+            relevantMeeting.Attendees.Add(userInput);
+            Console.WriteLine($"\n{userInput} was added to the '{relevantMeeting.Name}' meeting at {DateTime.Now}");
+        }
+        public List<Meeting> ReturnListOfMeetingsTheUserAttends(Database database, string userInput)
+        {
+            List<Meeting> meetingsPersonAttends = database.AllMeetings.Where(x => x.Attendees.Contains(userInput)).ToList();
+            return meetingsPersonAttends;
+        }
 
+        public Meeting[] ReturnOverlappingMeetings(List<Meeting> meetingsPersonAttends, Meeting relevantMeeting)
+        {
+            Meeting[] fullyOverlapingMeetings = meetingsPersonAttends.Where(x => x.StartDate <= relevantMeeting.EndDate && x.EndDate >= relevantMeeting.StartDate).ToArray();
+            Meeting[] StartOverlapingMeetings = meetingsPersonAttends.Where(x => x.StartDate >= relevantMeeting.StartDate && x.StartDate <= relevantMeeting.EndDate).ToArray();
+            Meeting[] EndOverlapingMeetings = meetingsPersonAttends.Where(x => x.EndDate >= relevantMeeting.StartDate && x.EndDate <= relevantMeeting.EndDate).ToArray();
+            Meeting[] output = fullyOverlapingMeetings.Union(StartOverlapingMeetings).Union(EndOverlapingMeetings).ToArray();
+            return output;
+        }
+        public void ShowAllOverlappingMeetings(Meeting[] overlapingMeetings, string userInput)
+        {
+            if (overlapingMeetings.Any())
+            {
+                Console.WriteLine($"\nWarning! {userInput} has a meeting at this time. The list of intersecting meetings:");
+                for (int i = 0; i < overlapingMeetings.Length; i++)
+                {
+                    Console.WriteLine($"{i} - Name: {overlapingMeetings[i].Name} - Start date: {overlapingMeetings[i].StartDate} - End date: {overlapingMeetings[i].EndDate}");
+                }
+            }
+        }
         public string RemovePerson(Database database, int selectedMeeting)
         {
             var relevantMeeting = database.AllMeetings[selectedMeeting - 1];
             string userInput = UITools.AnswerQuestion("Enter the name of the person you want to remove from the meeting:");
-            if(relevantMeeting.ResponsiblePerson != userInput)
+            if(!CheckForResponsiblePerson(relevantMeeting, userInput))
             {
                 Console.WriteLine($"{userInput} was removed from the meeting.");
-                relevantMeeting.Attendees.Remove(userInput);
+                RemovePersonFromDB(relevantMeeting, userInput);
             }
             else
             {
                 Console.WriteLine($"{userInput} is the responsible person for this meeting therefore cannot be removed");
             }
             return userInput;
+        }
+
+        public void RemovePersonFromDB(Meeting relevantMeeting, string userInput)
+        {
+            relevantMeeting.Attendees.Remove(userInput);
         }
 
         public void FilterMeetingsByDescription(Database database, string question)
