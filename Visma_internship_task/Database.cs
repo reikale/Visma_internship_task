@@ -37,7 +37,6 @@ namespace Visma_internship_task
         {
             var textData = JsonConvert.SerializeObject(AllMeetings);
             File.WriteAllText(FILE_NAME, textData);
-            Console.WriteLine("issaugojo");
             
         }
 
