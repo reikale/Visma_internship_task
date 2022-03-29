@@ -49,17 +49,16 @@ namespace Visma_internship_task
 
 
         /// <summary>
-        /// Cia aprašymas
+        /// Creates a meeting of type Meeting
         /// </summary>
-        /// <param name="meetingName">Šitas parametras nurodo susirinkimo vardą</param>
+        /// <param name="meetingName"></param>
         /// <param name="responsiblePerson"></param>
         /// <param name="description"></param>
         /// <param name="meetingCategory"></param>
         /// <param name="meetingType"></param>
         /// <param name="meetingStart"></param>
         /// <param name="meetingEnd"></param>
-        /// <returns>Grąžina meeting objektą</returns>
-        /// <exception cref="ArgumentException">Jei kažkas negerai - exception</exception>
+        /// <returns>Returns object of type Meeting</returns>
 
         public Meeting CreateMeetingObject(string meetingName, string responsiblePerson, string description, Category meetingCategory, Models.Type meetingType, DateTime meetingStart, DateTime meetingEnd)
         {
