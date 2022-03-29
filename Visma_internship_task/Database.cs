@@ -19,7 +19,17 @@ namespace Visma_internship_task
 
         public void AddMeetingToDb(Meeting meeting)
         {
-            AllMeetings.Add(meeting);
+            if(AllMeetings == null)
+            {
+                List<Meeting> newMeeting = new List<Meeting>();
+                newMeeting.Add(meeting);
+                AllMeetings = newMeeting;
+            }
+            else
+            {
+                AllMeetings.Add(meeting);
+            }
+            
             SaveData();
         }
 
@@ -27,6 +37,7 @@ namespace Visma_internship_task
         {
             var textData = JsonConvert.SerializeObject(AllMeetings);
             File.WriteAllText(FILE_NAME, textData);
+            Console.WriteLine("issaugojo");
             
         }
 
@@ -48,7 +59,15 @@ namespace Visma_internship_task
 
         public Meeting[] ReturnAllMeetings()
         {
-            return AllMeetings.ToArray();
+            if(AllMeetings == null)
+            {
+                return new List<Meeting>().ToArray();
+            }
+            else
+            {
+                return AllMeetings.ToArray();
+            }
+
         }
 
         public string[] ReturnAllResponsiblePeople()

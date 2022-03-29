@@ -23,7 +23,7 @@ namespace Visma_internship_task.Tests
             _database = new Database();
             _meetingsController = new MeetingController();
             _peopleController = new PeopleController(_meetingsController);
-            _meetingsController.CreateReferenceToPeopleController(_peopleController);
+            _meetingsController.CreateReferenceToPeopleController(_peopleController, _database);
             _filter = new Filters(_meetingsController);
         }
         [DataRow("testName", "testResponsiblePerson", "testDescription", Category.TeamBuilding, Models.Type.Live, "2000-01-01", "2022-01-01", "testResponsiblePerson")]

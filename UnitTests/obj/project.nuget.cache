@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9I3EFCocfOgsnzJiaAnte6uBNPZfvIqty7ncfTYvx7WKxoJMIqxggHZqLhcO1gOZjKNWMLs+xLP6N9zWVEGzWA==",
+  "dgSpecHash": "Go00AccnWwaKFW5vqLBzdgVd5Bk6aqnP5yOqCmMSs7SQtkFFQaFn/7ZU7eAIxEC3ZS2Ezj7wU4erS5ua3e+90w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj",
+  "projectFilePath": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Inga\\.nuget\\packages\\coverlet.collector\\3.1.0\\coverlet.collector.3.1.0.nupkg.sha512",
     "C:\\Users\\Inga\\.nuget\\packages\\microsoft.codecoverage\\16.11.0\\microsoft.codecoverage.16.11.0.nupkg.sha512",

@@ -28,7 +28,7 @@ namespace Visma_internship_task.Helpers
         public Action[] GetStartingActions() => new Action[]
         {
             () => _database.AddMeetingToDb(_meetingController.CreateAMeeting()),
-            () => _meetingController.DisplayAllMeetings(_database.ReturnAllMeetings()),
+            () => DisplayAllMeetings(),
             () => Console.Clear()
         };
         public Action[] MeetingActions() => new Action[]
@@ -56,6 +56,15 @@ namespace Visma_internship_task.Helpers
             () => Console.Clear()
         };
 
+        public void DisplayAllMeetings()
+        {
+            int nextMove = _meetingController.DisplayAllMeetings(_database.ReturnAllMeetings());
+            if(nextMove < 0)
+            {
+                _selectedMeeting = -1;
+
+            }
+        }
         public void AddPersonToAttendees()
         {
             _peopleController.AddPerson(_database, _selectedMeeting);
@@ -99,6 +108,7 @@ namespace Visma_internship_task.Helpers
         public void SelectAMeeting()
         {
             Console.Clear();
+
             _selectedMeeting = UITools.SelectValue(_database.AllMeetings.Select(x => x.Name).ToArray(), "Please select a meeting from the list:", false);
         }
 

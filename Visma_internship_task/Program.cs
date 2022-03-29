@@ -12,7 +12,7 @@ MeetingController meetingController = new MeetingController();
 PeopleController peopleController = new PeopleController(meetingController);
 Filters filters = new Filters(meetingController);
 Actions Actions = new Actions(DB, meetingController, filters, peopleController);
-meetingController.CreateReferenceToPeopleController(peopleController);
+meetingController.CreateReferenceToPeopleController(peopleController, DB);
 
 DB.LoadData();
 

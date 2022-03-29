@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj": {}
+    "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj": {
+    "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj",
         "projectName": "Visma_internship_task.Tests",
-        "projectPath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj",
+        "projectPath": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\UnitTests\\Visma_internship_task.Tests.csproj",
         "packagesPath": "C:\\Users\\Inga\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\UnitTests\\obj\\",
+        "outputPath": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\UnitTests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Inga\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,8 +28,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj": {
-                "projectPath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj"
+              "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj": {
+                "projectPath": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj"
               }
             }
           }
@@ -80,14 +80,14 @@
         }
       }
     },
-    "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj": {
+    "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj",
+        "projectUniqueName": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj",
         "projectName": "Visma_internship_task",
-        "projectPath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj",
+        "projectPath": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\Visma_internship_task\\Visma_internship_task.csproj",
         "packagesPath": "C:\\Users\\Inga\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Inga\\Documents\\GitHub\\Visma_internship_task\\Visma_internship_task\\obj\\",
+        "outputPath": "C:\\Users\\Inga\\Documents\\Downloads\\Visma_internship_task\\Visma_internship_task\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Inga\\AppData\\Roaming\\NuGet\\NuGet.Config",

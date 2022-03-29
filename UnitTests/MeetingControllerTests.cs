@@ -25,7 +25,7 @@ namespace Visma_internship_task.Tests
             _database = new Database();
             _meetingsController = new MeetingController();
             _peopleController = new PeopleController(_meetingsController);
-            _meetingsController.CreateReferenceToPeopleController(_peopleController);
+            _meetingsController.CreateReferenceToPeopleController(_peopleController, _database);
             _filter = new Filters(_meetingsController);
         }
 
@@ -83,10 +83,10 @@ namespace Visma_internship_task.Tests
             Meeting[] fullArray = new Meeting[] { meeting };
 
 
-            string expectedFull = $"There are {fullArray.Length} meetings";
+            int expectedFull = 1;
 
             //Act
-            string actualFull = _meetingsController.CreateAMeetingIfThereAreNone(fullArray);
+            int actualFull = _meetingsController.CreateAMeetingIfThereAreNone(fullArray);
 
             //Assert
             Assert.AreEqual(actualFull, expectedFull);

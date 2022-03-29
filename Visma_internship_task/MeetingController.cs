@@ -13,13 +13,16 @@ namespace Visma_internship_task
     public class MeetingController
     {
         private PeopleController _peopleController;
+        private Database _database;
+
         public MeetingController()
         {
             
         }
-        public void CreateReferenceToPeopleController(PeopleController peopleController)
+        public void CreateReferenceToPeopleController(PeopleController peopleController, Database database)
         {
             _peopleController = peopleController;
+            _database = database;
         }
         public Meeting CreateAMeeting()
         {
@@ -92,31 +95,36 @@ namespace Visma_internship_task
             return database;
         }
 
-        public void DisplayAllMeetings(IMeeting[] meetings)
+        public int DisplayAllMeetings(IMeeting[] meetings)
         {
             Console.Clear();
-            CreateAMeetingIfThereAreNone(meetings);
+            int selection = CreateAMeetingIfThereAreNone(meetings);
+            if (selection == -1)
+            {
+                return -1;
+            }
             foreach (var meeting in meetings)
             {
                 Console.WriteLine(meeting.Name);
             }
             Console.WriteLine("\n\n");
+            return selection;
         }
 
-        public string CreateAMeetingIfThereAreNone(IMeeting[] meetings)
+        public int CreateAMeetingIfThereAreNone(IMeeting[] meetings)
         {
             if (meetings.Length == 0)
             {
                 var actions = new Action[]
                 {
-                    () => CreateAMeeting(),
+                    () => _database.AddMeetingToDb(CreateAMeeting()),
                     () => Console.Clear()
                 };
                 
                 UITools.SelectValue(new string[] { "YES", "NO" }, "\nThere are no meetings. Would you like to create one?", actions);
-                return "There are no meetings, therefore user was suggested to create one";
+                return -1;
             }
-            return $"There are {meetings.Length} meetings";
+            return 1;
         }
 
         public List<Meeting> ReturnListOfMeetingsTheUserAttends(Database database, string userInput)
@@ -159,8 +167,16 @@ namespace Visma_internship_task
         
         public Meeting[] ReturnMeetingsWhenCategory(Database database, Category category)
         {
-            Meeting[] output = database.AllMeetings.Where(x => x.Category == category).ToArray();
-            return output;
+            int number = database.AllMeetings.Where(x => x.Category == category).Count();
+            if (number == 0)
+            {
+                return Array.Empty<Meeting>();
+            }
+            else
+            {
+                Meeting[] output = database.AllMeetings.Where(x => x.Category == category).ToArray();
+                return output;
+            }
         }
 
         public Meeting[] ReturnMeetingsWhenType(Database database, Models.Type type)

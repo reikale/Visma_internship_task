@@ -24,14 +24,14 @@ namespace Visma_internship_task.Tests
             _database = new Database();
             _meetingsController = new MeetingController();
             _peopleController = new PeopleController(_meetingsController);
-            _meetingsController.CreateReferenceToPeopleController(_peopleController);
+            _meetingsController.CreateReferenceToPeopleController(_peopleController, _database);
             _filter = new Filters(_meetingsController);
         }
 
-        [DataRow(0, ",", "Sorry, there is no meeting with description that includes ','")]
-        [DataRow(3, ",", "Showing results of 3 meetings")]
+        [DataRow(0, ",", "Description", "Sorry, there is no meeting with Description that includes ','")]
+        [DataRow(3, ",", "Description", "Showing results of 3 meetings")]
         [DataTestMethod()]
-        public void DisplayFilterResultsDescriptionTest(int numberOfMeetings, string userInput, string expected)
+        public void DisplayFilterResultsByPropTest(int numberOfMeetings, string userInput, string paramName, string expected)
         {
             List<Meeting> database = new List<Meeting>();
             for (int i = 0; i < numberOfMeetings; i++)
@@ -41,7 +41,7 @@ namespace Visma_internship_task.Tests
             }
             Meeting[] result = database.ToArray();
 
-            string actual = UITools.DisplayFilterResultsDescription(result, userInput, "Description");
+            string actual = UITools.DisplayFilterResultsByProp(result, userInput, paramName);
 
             Assert.AreEqual(expected, actual);
         }
