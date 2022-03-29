@@ -156,7 +156,7 @@ namespace Visma_internship_task
         {
             if (result.Length == 0)
             {
-                Console.WriteLine($"Sorry, there is no such {propName.ToLowerInvariant}");
+                Console.WriteLine($"Sorry, there is no such meeting that would meet this criteria");
                 return $"Sorry, there is no meeting with that {propName.ToLowerInvariant}";
             }
             else
