@@ -222,32 +222,43 @@ namespace Visma_internship_task
 
         public void FilterMeetingsByDescription(Database database, string question)
         {
-            Console.WriteLine(question);
-            var userInput = Console.ReadLine();
+            var userInput = UITools.AnswerQuestion(question);
+
             if (userInput != null)
             {
-                var result = database.AllMeetings.Where(x => x.Description.Contains(userInput)).ToArray();
+                Meeting[] result = ReturnMeetingsWhenDescriptionContains(database, userInput);
                 Console.Clear();
-                if(result.Length == 0)
-                {
-                    Console.WriteLine($"Sorry, there is no meeting with description that includes '{userInput}'");
-                }
-                else
-                {
-                    Console.WriteLine("Filter results:");
-                    for (int i = 0; i < result.Length; i++)
-                    {
-                        Console.WriteLine($"{i} - Name: {result[i].Name} - Description: {result[i].Description}");
-                    }
-                }
+                DisplayFilterResultsDescription(result, userInput);
             }
         }
-
+        public Meeting[] ReturnMeetingsWhenDescriptionContains(Database database, string userInput)
+        {
+            Meeting[] output = database.AllMeetings.Where(x => x.Description.Contains(userInput)).ToArray();
+            return output;
+        }
+        public string DisplayFilterResultsDescription(Meeting[] result, string userInput)
+        {
+            if (result.Length == 0)
+            {
+                Console.WriteLine($"Sorry, there is no meeting with description that includes '{userInput}'");
+                return $"Sorry, there is no meeting with description that includes '{userInput}'";
+            }
+            else
+            {
+                Console.WriteLine("Filter results:");
+                for (int i = 0; i < result.Length; i++)
+                {
+                    Console.WriteLine($"{i} - Name: {result[i].Name} - Description: {result[i].Description}");
+                }
+                return $"Showing results of {result.Length} meetings";
+            }
+            
+        }
         public void FilterMeetingsByResponsiblePerson(Database database, string responsiblePerson)
         {
             if (responsiblePerson != null)
             {
-                var result = database.AllMeetings.Where(x => x.ResponsiblePerson == responsiblePerson).ToArray();
+                var result = ReturnMeetingsWhenResponsibleIs(database, responsiblePerson);
                 Console.Clear();
                 if (result.Length == 0)
                 {
@@ -264,9 +275,15 @@ namespace Visma_internship_task
             }
         }
 
+        public Meeting[] ReturnMeetingsWhenResponsibleIs(Database database, string responsiblePerson)
+        {
+            Meeting[] output = database.AllMeetings.Where(x => x.ResponsiblePerson == responsiblePerson).ToArray();
+            return output;
+        }
+        
         public void FilterMeetingByCategory(Database database, Category category)
         {
-            var result = database.AllMeetings.Where(x => x.Category == category).ToArray();
+            var result = ReturnMeetingsWhenCategory(database, category);
             Console.Clear();
             if(result.Length == 0)
             {
@@ -281,9 +298,16 @@ namespace Visma_internship_task
                 }
             }
         }
+
+        public Meeting[] ReturnMeetingsWhenCategory(Database database, Category category)
+        {
+            Meeting[] output = database.AllMeetings.Where(x => x.Category == category).ToArray();
+            return output;
+        }
+
         public void FilterMeetingByType(Database database, Models.Type type)
         {
-            var result = database.AllMeetings.Where(x => x.Type == type).ToArray();
+            var result = ReturnMeetingsWhenType(database, type);
             Console.Clear();
             if (result.Length == 0)
             {
@@ -299,12 +323,18 @@ namespace Visma_internship_task
             }
         }
 
+        public Meeting[] ReturnMeetingsWhenType(Database database, Models.Type type)
+        {
+            Meeting[] output = database.AllMeetings.Where(x => x.Type == type).ToArray();
+            return output;
+        }
+
         public void FilterMeetingByDate(Database database)
         {
-            var userStartDate = UITools.AnswerDateQuestion("Type a start time for the meeting:");
-            var userEndDate = UITools.AnswerDateQuestion("Type a end time for the meeting:");
+            DateTime userStartDate = UITools.AnswerDateQuestion("Type a start time for the meeting:");
+            DateTime userEndDate = UITools.AnswerDateQuestion("Type a end time for the meeting:");
             
-            var filteredMeetings = database.AllMeetings.Where(x => x.StartDate >= userStartDate && x.EndDate <= userEndDate).ToArray();
+            Meeting[] filteredMeetings = ReturnMeetingsByDates(database, userStartDate, userEndDate);
             if (filteredMeetings.Length == 0)
             {
                 Console.WriteLine($"Sorry there is no meeting of selected time period");
@@ -319,6 +349,12 @@ namespace Visma_internship_task
             }
         }
 
+        public Meeting[] ReturnMeetingsByDates(Database database, DateTime userStartDate, DateTime userEndDate)
+        {
+            Meeting[] output = database.AllMeetings.Where(x => x.StartDate >= userStartDate && x.EndDate <= userEndDate).ToArray(); database.AllMeetings.Where(x => x.StartDate >= userStartDate && x.EndDate <= userEndDate).ToArray();
+            return output;
+        }
+
         public void FilterByAttendees(Database database)
         {
             bool isOn = true;
@@ -329,7 +365,6 @@ namespace Visma_internship_task
                 if (int.TryParse(userInput, out selectedNumber))
                 {
                     isOn = false;
-                    
                 }
                 else
                 {

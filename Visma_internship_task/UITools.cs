@@ -5,11 +5,17 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static Visma_internship_task.ConsoleNameRetriever;
 
 namespace Visma_internship_task
 {
-    public static class UITools
+    public class UITools : ConsoleNameRetriever
     {
+
+        public override string GetNextName()
+        {
+            return base.GetNextName();
+        }
         public static int SelectValue(string[] options, string question, Action[] actions)
         {
             bool exit = false;
@@ -22,6 +28,7 @@ namespace Visma_internship_task
                 {
                     Console.WriteLine($"{i + 1} - {options[i]}");
                 }
+                
                 if (!int.TryParse(Console.ReadLine(), out selection) || selection > options.Length || selection < 0)
                 {
                     Console.Clear();

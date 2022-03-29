@@ -14,6 +14,8 @@ namespace Visma_internship_task.Tests
     [TestClass()]
     public class MeetingControllerTests
     {
+        public Database database = new Database();
+        public MeetingController meetingsController = new MeetingController();
 
         [DataRow("testName", "testResponsiblePerson", "testDescription", Category.TeamBuilding, Models.Type.Live, "2000-01-01", "2022-01-01", "testName", "testResponsiblePerson")]
         [DataRow("a", "b", "c", Category.TeamBuilding, Models.Type.Live, "2000-01-01", "2022-01-01", "a", "b")]
@@ -24,8 +26,7 @@ namespace Visma_internship_task.Tests
             DateTime startDateInput = DateTime.Parse(meetingStart);
             DateTime endDateInput = DateTime.Parse(meetingEnd);
 
-            var meetingController = new MeetingController();
-            Meeting meetingObject = meetingController.CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput);
+            Meeting meetingObject = meetingsController.CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput);
 
             //Act
             var expectedName = expectedResultName;
@@ -51,13 +52,12 @@ namespace Visma_internship_task.Tests
             DateTime startDateInput = DateTime.Parse(meetingStart);
             DateTime endDateInput = DateTime.Parse(meetingEnd);
 
-            var meetingController = new MeetingController();
-            Meeting meetingObject = meetingController.CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput);
+            Meeting meetingObject = meetingsController.CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput);
 
 
             // Kodel man rodo kad  nepraeina testas nors gaunu argument exception? 
             //Assert
-            Assert.ThrowsException<ArgumentException>(() => meetingController.CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput));
+            Assert.ThrowsException<ArgumentException>(() => meetingsController.CreateMeetingObject(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput));
         }
 
         [DataRow("testName", "testResponsiblePerson", "testDescription", Category.TeamBuilding, Models.Type.Live, "2000-01-01", "2022-01-01")]
@@ -66,7 +66,6 @@ namespace Visma_internship_task.Tests
         public void CreateAMeetingIfThereAreNoneTest(string meetingName, string responsiblePerson, string description, Category meetingCategory, Models.Type meetingType, string meetingStart, string meetingEnd)
         {
             //Arrange
-            var meetingController = new MeetingController();
 
             DateTime startDateInput = DateTime.Parse(meetingStart);
             DateTime endDateInput = DateTime.Parse(meetingEnd);
@@ -80,7 +79,7 @@ namespace Visma_internship_task.Tests
             //string expectedEmpty = "There are no meetings, therefore user was suggested to create one";
 
             //Act
-            string actualFull = meetingController.CreateAMeetingIfThereAreNone(fullArray);
+            string actualFull = meetingsController.CreateAMeetingIfThereAreNone(fullArray);
             //string actualEmpty = meetingController.CreateAMeetingIfThereAreNone(emptyArray);
 
             //Assert
@@ -94,12 +93,12 @@ namespace Visma_internship_task.Tests
         [DataTestMethod]
         public void CheckForResponsiblePersonTest_ShouldWork(string meetingName, string responsiblePerson, string description, Category meetingCategory, Models.Type meetingType, string meetingStart, string meetingEnd, string expectedPerson)
         {
-            var meetingController = new MeetingController();
+
             DateTime startDateInput = DateTime.Parse(meetingStart);
             DateTime endDateInput = DateTime.Parse(meetingEnd);
             Meeting meeting = new Meeting(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput);
 
-            bool actualResult = meetingController.CheckForResponsiblePerson(meeting, expectedPerson);
+            bool actualResult = meetingsController.CheckForResponsiblePerson(meeting, expectedPerson);
 
             Assert.IsTrue(actualResult);
         }
@@ -109,12 +108,11 @@ namespace Visma_internship_task.Tests
         [DataTestMethod]
         public void CheckForResponsiblePersonTest_Shouldfail(string meetingName, string responsiblePerson, string description, Category meetingCategory, Models.Type meetingType, string meetingStart, string meetingEnd, string expectedPerson)
         {
-            var meetingController = new MeetingController();
             DateTime startDateInput = DateTime.Parse(meetingStart);
             DateTime endDateInput = DateTime.Parse(meetingEnd);
             Meeting meeting = new Meeting(meetingName, responsiblePerson, description, meetingCategory, meetingType, startDateInput, endDateInput);
 
-            bool actualResult = meetingController.CheckForResponsiblePerson(meeting, expectedPerson);
+            bool actualResult = meetingsController.CheckForResponsiblePerson(meeting, expectedPerson);
 
             Assert.IsFalse(actualResult);
         }
@@ -123,8 +121,6 @@ namespace Visma_internship_task.Tests
         public void RemoveMeetingFromDBTest()
         {
             //Arrange
-            Database database = new Database();
-            MeetingController meetingsController = new MeetingController();
             Meeting meeting = new Meeting("Test", "test", "responsibleTest", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
 
             database.AddMeetingToDb(meeting);
@@ -147,8 +143,6 @@ namespace Visma_internship_task.Tests
         public void CheckIfPersonAlreadyInMeetingTest(string name, string userInput, bool expected)
         {
             //Arrange
-            Database database = new Database();
-            MeetingController meetingsController = new MeetingController();
             Meeting meeting = meetingsController.CreateMeetingObject("Test", name, "responsibleTest", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
             database.AddMeetingToDb(meeting);
             Meeting relevantMeeting = database.AllMeetings.Where(x => x.Name == "Test").SingleOrDefault();
@@ -163,8 +157,7 @@ namespace Visma_internship_task.Tests
         [DataTestMethod]
         public void ReturnListOfMeetingsTheUserAttendsTest(int numberOfMeetings, string person, int expected)
         {
-            Database database = new Database();
-            MeetingController meetingsController = new MeetingController();
+            // Arrange
             for (int i = 0; i < numberOfMeetings; i++)
             {
                 Meeting meeting = meetingsController.CreateMeetingObject("Test" + i, person, "responsibleTest", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
@@ -187,9 +180,7 @@ namespace Visma_internship_task.Tests
         [DataTestMethod]
         public void ReturnOverlappingMeetingsTest(int numberOfMeetings, int numberOfOverlaps, int startMinutes, int duration)
         {
-            Database database = new Database();
-            MeetingController meetingsController = new MeetingController();
-
+            // Arrange
             for (int i = 0; i < numberOfMeetings; i++)
             {
 
@@ -214,10 +205,9 @@ namespace Visma_internship_task.Tests
         [DataTestMethod()]
         public void AddPersonToDBTest(string name, int expected)
         {
-            Database database = new Database();
-            MeetingController meetingsController = new MeetingController();
+            // Arrange
             Meeting meeting = meetingsController.CreateMeetingObject("Test", "TestUser", "responsibleTest", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
-            
+
             database.AddMeetingToDb(meeting);
             Meeting relevantMeeting = database.AllMeetings.Where(x => x.Name == "Test").FirstOrDefault();
 
@@ -231,10 +221,9 @@ namespace Visma_internship_task.Tests
         [DataTestMethod()]
         public void RemovePersonFromDBTest(int expected)
         {
-            Database database = new Database();
-            MeetingController meetingsController = new MeetingController();
+            // Arrange
             Meeting meeting = meetingsController.CreateMeetingObject("Test", "TestUser", "responsibleTest", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
-            
+
             database.AddMeetingToDb(meeting);
             Meeting relevantMeeting = database.AllMeetings.Where(m => m.Name == "Test").SingleOrDefault();
             relevantMeeting.Attendees.Add("UserToRemove");
@@ -249,6 +238,104 @@ namespace Visma_internship_task.Tests
             Assert.IsFalse(isThereThisUser);
         }
 
-        
+        [DataRow(",", 2, true)]
+        [DataRow("a", 2, true)]
+        [DataRow("()", 1, true)]
+        [DataRow("1", 0, false)]
+        [DataTestMethod()]
+        public void ReturnMeetingsWhenDescriptionContainsTest(string input, int expected, bool expectedContains)
+        {
+            // Arrange 
+            string[] descriptions = new string[] { "!@#$%^&*()_+,", "abcdefgh", "Lorem ipsum dolor sit amet, consectetur adipiscing elit" };
+            for (int i = 0; i < descriptions.Length; i++)
+            {
+                Meeting meeting = meetingsController.CreateMeetingObject("Test" + i, "TestUser", descriptions[i], Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
+                database.AddMeetingToDb(meeting);
+            }
+
+            Meeting[] meetings = meetingsController.ReturnMeetingsWhenDescriptionContains(database, input);
+
+
+            int actual = meetings.Count();
+
+            // Assert 
+            if (meetings.Length != 0)
+            {
+                bool ActualContains = meetings[0].Description.Contains(input);
+                Assert.AreEqual(expectedContains, ActualContains);
+            }
+
+            Assert.AreEqual(expected, actual);
+
+
+        }
+        [DataRow(0, ",", "Sorry, there is no meeting with description that includes ','")]
+        [DataRow(3, ",", "Showing results of 3 meetings")]
+        [DataTestMethod()]
+        public void DisplayFilterResultsDescriptionTest(int numberOfMeetings, string userInput, string expected)
+        {
+            List<Meeting> database = new List<Meeting>();
+            for (int i = 0; i < numberOfMeetings; i++)
+            {
+                Meeting meeting = meetingsController.CreateMeetingObject("Test" + i, "TestPerson", "responsibleTest", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
+                database.Add(meeting);
+            }
+            Meeting[] result = database.ToArray();
+
+            string actual = meetingsController.DisplayFilterResultsDescription(result, userInput);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [DataRow("TestUser", 2, "TestUser")]
+        [DataRow("NotTestUser", 1, "NotTestUser")]
+        [DataRow("1", 0, "1")]
+        [DataTestMethod()]
+        public void ReturnMeetingsWhenResponsibleIsTest(string input, int expected, string expectedPerson)
+        {
+            // Arrange
+            string[] people = new string[] { "TestUser", "NotTestUser", "TestUser" };
+            for (int i = 0; i < people.Length; i++)
+            {
+                Meeting meeting = meetingsController.CreateMeetingObject("Test" + i, people[i], "TestDescription", Category.Hub, Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
+                database.AddMeetingToDb(meeting);
+            }
+
+            Meeting[] meetings = meetingsController.ReturnMeetingsWhenResponsibleIs(database, input);
+
+            // Act
+            int actual = meetings.Count();
+            if (meetings.Length > 0)
+            {
+                string actualResponsible = meetings[0].ResponsiblePerson;
+                Assert.AreEqual(expectedPerson, actualResponsible);
+            }
+
+            // Assert 
+            Assert.AreEqual(expected, actual);
+
+        }
+
+        [DataRow(Category.CodeMonkey, 2)]
+        [DataRow(Category.TeamBuilding, 1)]
+        [DataRow(Category.Short, 0)]
+        [DataTestMethod()]
+        public void ReturnMeetingsWhenCategoryTest(Category inputCategory, int expected)
+        {
+            // Arrange
+            Category[] categories = new Category[] { Category.CodeMonkey, Category.TeamBuilding, Category.CodeMonkey };
+            for (int i = 0; i < categories.Length; i++)
+            {
+                Meeting meeting = meetingsController.CreateMeetingObject("Test" + i, "TestUser", "TestDescription", categories[i], Models.Type.Live, DateTime.Now, DateTime.Now.AddDays(1));
+                database.AddMeetingToDb(meeting);
+            }
+
+            // Act
+            Meeting[] meetings = meetingsController.ReturnMeetingsWhenCategory(database, inputCategory);
+            int actual = meetings.Length;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
